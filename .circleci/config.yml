@@ -41,7 +41,7 @@ jobs:
       - run:
           name: Update tests
           command:
-            sudo docker run --rm --volume=\"$(pwd):/app\" hiptest/hiptest-publisher --token=${SECRET_TOKEN} -c cucumber-java.conf --only=features,step_definitions
+            docker run --rm --volume=\"$(pwd):/app\" hiptest/hiptest-publisher --token=${SECRET_TOKEN} -c cucumber-java.conf --only=features,step_definitions
       
       - run:
           name: regenerate tests and fetch UIDs
