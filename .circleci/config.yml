@@ -7,7 +7,7 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/openjdk:8-jdk
+      - image: circleci/openjdk:jdk-buster
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -38,16 +38,23 @@ jobs:
           paths:
             - ~/.m2
           key: v1-dependencies-{{ checksum "pom.xml" }}          
- 
+
+      - run:
+          name: Install publisher
+          command: |
+            sudo apt update
+            sudo apt install ruby-dev zlib1g-dev 
+            sudo gem install hiptest-publisher 
+    
       - run:
           name: Update tests
           command:
-            docker run -it --rm -u $UID -v $(pwd):/app hiptest/hiptest-publisher --token=${SECRET_TOKEN} -c cucumber-java.conf --only=features,step_definitions
+            hiptest-publisher --token=${SECRET_TOKEN} -c cucumber-java.conf --only=features,step_definitions
       
       - run:
           name: regenerate tests and fetch UIDs
           command:
-            docker run -it --rm -u $UID -v $(pwd):/app hiptest/hiptest-publisher --token=${SECRET_TOKEN} -c cucumber.conf --test-run-id=${TEST_RUN_ID} --without=actionwords
+            hiptest-publisher --token=${SECRET_TOKEN} -c cucumber-java.conf --test-run-id=${TEST_RUN_ID} --without=actionwords
 
       # run tests!
       - run:
@@ -58,4 +65,4 @@ jobs:
       - run:
           name: push test results file
           command:
-            docker run -it --rm -u $UID -v $(pwd):/app hiptest/hiptest-publisher -c cucumber.conf --token=${SECRET_TOKEN} --push="target/cuke-results.json" --test-run-id=${TEST_RUN_ID} --push-format cucumber-json
+            hiptest-publisher -c cucumber-java.conf --token=${SECRET_TOKEN} --push="target/cuke-results.json" --test-run-id=${TEST_RUN_ID} --push-format cucumber-json
