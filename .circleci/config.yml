@@ -42,12 +42,12 @@ jobs:
       - run:
           name: Update tests
           command:
-            docker run --rm --volume=\"$(pwd):/app\" hiptest/hiptest-publisher --token=${SECRET_TOKEN} -c cucumber-java.conf --only=features,step_definitions
+            docker run -it --rm -u $UID -v $(pwd):/app hiptest/hiptest-publisher --token=${SECRET_TOKEN} -c cucumber-java.conf --only=features,step_definitions
       
       - run:
           name: regenerate tests and fetch UIDs
           command:
-            sudo docker run --rm --volume=\"$(pwd):/app\" hiptest/hiptest-publisher --token=${SECRET_TOKEN} -c cucumber.conf --test-run-id=${TEST_RUN_ID} --without=actionwords
+            docker run -it --rm -u $UID -v $(pwd):/app hiptest/hiptest-publisher --token=${SECRET_TOKEN} -c cucumber.conf --test-run-id=${TEST_RUN_ID} --without=actionwords
 
       # run tests!
       - run:
@@ -58,4 +58,4 @@ jobs:
       - run:
           name: push test results file
           command:
-            sudo docker run --rm --volume=\"$(pwd):/app\" hiptest/hiptest-publisher -c cucumber.conf --token=${SECRET_TOKEN} --push="target/cuke-results.json" --test-run-id=${TEST_RUN_ID} --push-format cucumber-json
+            docker run -it --rm -u $UID -v $(pwd):/app hiptest/hiptest-publisher -c cucumber.conf --token=${SECRET_TOKEN} --push="target/cuke-results.json" --test-run-id=${TEST_RUN_ID} --push-format cucumber-json
