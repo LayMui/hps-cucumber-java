@@ -40,9 +40,9 @@ jobs:
       - run:
         name: install hiptest-publisher docker image as an executable file
         command: |
-          echo "#! /bin/bash" >  ~/repo/hiptest-publisher
-          echo "docker run --rm --volume=\"$(pwd):/app\" hiptest/hiptest-publisher  \"\$@\"" >> ~/repo/hiptest-publisher
-          sudo chmod +x ~/repo/hiptest-publisher 
+          echo "#! /bin/bash" >  ~/repo/hiptest-publisher;
+          echo "docker run --rm --volume=\"$(pwd):/app\" hiptest/hiptest-publisher  \"\$@\"" >> ~/repo/hiptest-publisher;
+          sudo chmod +x ~/repo/hiptest-publisher;
       - store_artifacts:
           path: ~/repo/hiptest-publisher
           destination: artifact-file
