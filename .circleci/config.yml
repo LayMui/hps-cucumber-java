@@ -19,11 +19,6 @@ jobs:
     environment:
       # Customize the JVM maximum heap limit
       MAVEN_OPTS: -Xmx3200m
-
-    steps:
-      - checkout
-      - setup_remote_docker:
-          version: 18.06.0-ce
           
       # Download and cache dependencies
       - restore_cache:
@@ -47,14 +42,14 @@ jobs:
             sudo gem install hiptest-publisher 
     
       - run:
-          name: Update tests
+          name: update tests
           command:
-            hiptest-publisher --token=${SECRET_TOKEN} -c cucumber-java.conf --only=features,step_definitions
+            hiptest-publisher --token=${SECRET_TOKEN} -c cucumber-java.conf --only=features
       
       - run:
           name: regenerate tests and fetch UIDs
           command:
-            hiptest-publisher --token=${SECRET_TOKEN} -c cucumber-java.conf --test-run-id=${TEST_RUN_ID} --without=actionwords
+            hiptest-publisher --token=${SECRET_TOKEN} -c cucumber-java.conf --test-run-id=${TEST_RUN_ID} --only=features
 
       # run tests!
       - run:
