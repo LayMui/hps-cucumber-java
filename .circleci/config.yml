@@ -47,7 +47,7 @@ jobs:
       - run:
           name: Update tests
           command:
-            ./hiptest-publisher --token=${SECRET_TOKEN} -c cucumber-java.conf --only=features
+            ./hiptest-publisher --token=${SECRET_TOKEN} -c cucumber-java.conf --only=features,step_definitions
       
       - run:
           name: regenerate tests and fetch UIDs
